@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 
 @Service
@@ -22,7 +25,8 @@ public class StatementGenerater {
         csv.append(account.getBalance()).append("\n");
         //trasactions Table
         csv.append("Date,Amount,post Blanace\n");
-        for (Transaction transaction :account.getTransactions()){
+       List<Transaction> sorted= account.getTransactions().stream().sorted(Comparator.comparing(Transaction::getDate)).toList();
+        for (Transaction transaction :sorted){
             if (!transaction.getDate().isAfter(to) & !transaction.getDate().isBefore(from)){
                 csv.append(transaction.getDate()).append(",")
                         .append(transaction.getAmount()).append(",")

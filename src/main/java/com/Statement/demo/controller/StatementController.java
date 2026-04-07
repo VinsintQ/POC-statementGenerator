@@ -33,6 +33,7 @@ public class StatementController {
         transactions.add(new Transaction(LocalDate.of(2026, 5, 4), -50, 1350));
         transactions.add(new Transaction(LocalDate.of(2026, 5, 4), -50, 1350));
         transactions.add(new Transaction(LocalDate.of(2026, 4, 7), -50, 1350));
+        transactions.add(new Transaction(LocalDate.of(2026, 4, 1), -50, 1350));
          }
 
    Account account = new Account("ABCO1234","Ali",5000.0,transactions);
