@@ -26,7 +26,9 @@ import java.util.List;
 public class StatementController {
     //Sample Transaction
     List<Transaction> transactions = new ArrayList<>();
-    {   transactions.add(new Transaction(LocalDate.of(2026, 4, 1), 500, 1500));
+
+    {
+        transactions.add(new Transaction(LocalDate.of(2026, 4, 1), 500, 1500));
         transactions.add(new Transaction(LocalDate.of(2026, 4, 2), -200, 1300));
         transactions.add(new Transaction(LocalDate.of(2026, 4, 3), 100, 1400));
         transactions.add(new Transaction(LocalDate.of(2026, 4, 4), -50, 1350));
@@ -34,15 +36,15 @@ public class StatementController {
         transactions.add(new Transaction(LocalDate.of(2026, 5, 4), -50, 1350));
         transactions.add(new Transaction(LocalDate.of(2026, 4, 7), -50, 1350));
         transactions.add(new Transaction(LocalDate.of(2026, 4, 1), -50, 1350));
-         }
+    }
 
    Account account = new Account("ABCO1234","Ali",5000.0,transactions);
-     private StatementGenerater statementGenerater;
-     //Sample Account
+    //Sample Account
 
 
 
 
+    private StatementGenerater statementGenerater;
     public StatementController(StatementGenerater statementGenerater) {
         this.statementGenerater = statementGenerater;
     }

@@ -25,7 +25,10 @@ public class StatementGenerater {
         csv.append(account.getBalance()).append("\n");
         //trasactions Table
         csv.append("Date,Amount,post Blanace\n");
+
        List<Transaction> sorted= account.getTransactions().stream().sorted(Comparator.comparing(Transaction::getDate)).toList();
+
+
         for (Transaction transaction :sorted){
             if (!transaction.getDate().isAfter(to) & !transaction.getDate().isBefore(from)){
                 csv.append(transaction.getDate()).append(",")
