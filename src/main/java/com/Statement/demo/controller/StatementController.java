@@ -42,11 +42,11 @@ public class StatementController {
      @RequestParam(required = false) LocalDate from ,
             @RequestParam(required = false) LocalDate to) throws Exception {
 
-        byte[] csv = statementGenerater.generateCSV(id, from, to);
+        byte[] pdfBytes = statementGenerater.generatePDF(id, from, to);
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"statement.csv\"")
-                .contentType(MediaType.parseMediaType("text/csv"))
-                .body(csv);
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"account_" + id + ".pdf\"")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdfBytes);
     }
 }

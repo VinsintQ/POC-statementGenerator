@@ -5,6 +5,9 @@ import com.Statement.demo.model.Transaction;
 import com.Statement.demo.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -21,59 +24,41 @@ public class StatementGenerater {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
+    private TemplateEngine templateEngine;
 
 
-    public byte[] generateCSV(Long id, LocalDate from, LocalDate to) {
+    public byte[] generatePDF(Long id, LocalDate from, LocalDate to) {
         Optional<Account> accountOpt = accountRepository.findById(id);
         if (accountOpt.isEmpty()){
             throw new IllegalArgumentException("account not exist");
         }
         Account account = accountOpt.get();
 
+        try{
+            Context context = new Context();
+
+            //setting the variable for template
+            context.setVariable("account", account);
+
+            //inject the varibles to the HTML
+            String htmlContent = templateEngine.process("account-statement", context);
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+            ITextRenderer renderer = new ITextRenderer();
+
+            renderer.setDocumentFromString(htmlContent);
+
+            renderer.layout();
+
+            renderer.createPDF(byteArrayOutputStream);
+            return byteArrayOutputStream.toByteArray();
+        }catch (Exception e) {
+            throw new RuntimeException("Error generating PDF", e);
+        }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//        StringBuilder csv = new StringBuilder();
-//        // Account  table header
-//        csv.append("accountNumber,holderName,balance\n");
-//
-//        csv.append(account.getAccountNumber()).append(",");
-//        csv.append(account.getHolderName()).append(",");
-//        csv.append(account.getBalance()).append("\n");
-//        //trasactions Table
-//        csv.append("Date,Amount,post Blanace\n");
-
-//       List<Transaction> sorted= account.getTransactions().stream().sorted(Comparator.comparing(Transaction::getDate)).toList();
-//
-//
-//        for (Transaction transaction :sorted){
-//            if (to!=null) {
-//                if (!transaction.getDate().isAfter(to) & !transaction.getDate().isBefore(from)) {
-//                    csv.append(transaction.getDate()).append(",")
-//                            .append(transaction.getAmount()).append(",")
-//                            .append(transaction.getPostBalance()).append("\n");
-//                }
-//            }else{
-//                csv.append(transaction.getDate()).append(",")
-//                        .append(transaction.getAmount()).append(",")
-//                        .append(transaction.getPostBalance()).append("\n");
-//            }
-//        }
-
-          return csv.toString().getBytes(StandardCharsets.UTF_8);
     }
 }
