@@ -40,9 +40,10 @@ public class StatementController {
     public ResponseEntity<byte[]> getAccountStatement(
              @RequestParam(required = true) Long id,
      @RequestParam(required = false) LocalDate from ,
-            @RequestParam(required = false) LocalDate to) throws Exception {
+            @RequestParam(required = false) LocalDate to,
+             @RequestParam(required = false)String sort) throws Exception {
 
-        byte[] pdfBytes = statementGenerater.generatePDF(id, from, to);
+        byte[] pdfBytes = statementGenerater.generatePDF(id, from, to,sort);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"account_" + id + ".pdf\"")
