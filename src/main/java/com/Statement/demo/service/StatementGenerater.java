@@ -2,6 +2,8 @@ package com.Statement.demo.service;
 
 import com.Statement.demo.model.Account;
 import com.Statement.demo.model.Transaction;
+import com.Statement.demo.repository.AccountRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -9,13 +11,23 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
 public class StatementGenerater {
 
+    @Autowired
+    private AccountRepository accountRepository;
 
-    public byte[] generateCSV(Account account, LocalDate from, LocalDate to) {
+
+
+    public byte[] generateCSV(Long id, LocalDate from, LocalDate to) {
+        Optional<Account> accountOpt = accountRepository.findById(id);
+        if (accountOpt.isEmpty()){
+            throw new IllegalArgumentException("account not exist");
+        }
+        Account account = accountOpt.get();
         StringBuilder csv = new StringBuilder();
         // Account  table header
         csv.append("accountNumber,holderName,balance\n");
@@ -30,7 +42,13 @@ public class StatementGenerater {
 
 
         for (Transaction transaction :sorted){
-            if (!transaction.getDate().isAfter(to) & !transaction.getDate().isBefore(from)){
+            if (to!=null) {
+                if (!transaction.getDate().isAfter(to) & !transaction.getDate().isBefore(from)) {
+                    csv.append(transaction.getDate()).append(",")
+                            .append(transaction.getAmount()).append(",")
+                            .append(transaction.getPostBalance()).append("\n");
+                }
+            }else{
                 csv.append(transaction.getDate()).append(",")
                         .append(transaction.getAmount()).append(",")
                         .append(transaction.getPostBalance()).append("\n");

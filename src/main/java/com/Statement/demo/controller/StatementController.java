@@ -24,22 +24,7 @@ import java.util.List;
 
 
 public class StatementController {
-    //Sample Transaction
-    List<Transaction> transactions = new ArrayList<>();
 
-    {
-        transactions.add(new Transaction(LocalDate.of(2026, 4, 1), 500, 1500));
-        transactions.add(new Transaction(LocalDate.of(2026, 4, 2), -200, 1300));
-        transactions.add(new Transaction(LocalDate.of(2026, 4, 3), 100, 1400));
-        transactions.add(new Transaction(LocalDate.of(2026, 4, 4), -50, 1350));
-        transactions.add(new Transaction(LocalDate.of(2026, 5, 4), -50, 1350));
-        transactions.add(new Transaction(LocalDate.of(2026, 5, 4), -50, 1350));
-        transactions.add(new Transaction(LocalDate.of(2026, 4, 7), -50, 1350));
-        transactions.add(new Transaction(LocalDate.of(2026, 4, 1), -50, 1350));
-    }
-
-   Account account = new Account("ABCO1234","Ali",5000.0,transactions);
-    //Sample Account
 
 
 
@@ -53,10 +38,11 @@ public class StatementController {
 
      @GetMapping
     public ResponseEntity<byte[]> getAccountStatement(
-            @RequestParam LocalDate from,
-            @RequestParam LocalDate to) throws Exception {
+             @RequestParam(required = true) Long id,
+     @RequestParam(required = false) LocalDate from ,
+            @RequestParam(required = false) LocalDate to) throws Exception {
 
-        byte[] csv = statementGenerater.generateCSV(this.account, from, to);
+        byte[] csv = statementGenerater.generateCSV(id, from, to);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"statement.csv\"")
